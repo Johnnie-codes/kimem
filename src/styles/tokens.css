@@ -1,0 +1,49 @@
+/* ------------------------------------------------------------------
+   Kimem — design tokens
+   Theme colours live on :root so that derived tokens (which use
+   color-mix against --fg) recompute when .is-dark toggles.
+   ------------------------------------------------------------------ */
+:root {
+  /* palette */
+  --ivory: #f4efe6;
+  --cream: #eae2d3;
+  --sand: #cbbda6;
+  --ink: #1a1613;
+  --espresso: #191411;
+  --amber: #b5834a;
+  --gold: #d6b684;
+
+  /* theme (light by default) */
+  --bg: var(--ivory);
+  --fg: var(--ink);
+  --accent: var(--amber);
+
+  /* derived */
+  --fg-2: color-mix(in oklab, var(--fg) 66%, transparent);
+  --fg-3: color-mix(in oklab, var(--fg) 44%, transparent);
+  --line: color-mix(in oklab, var(--fg) 14%, transparent);
+  --line-strong: color-mix(in oklab, var(--fg) 34%, transparent);
+  --surface: color-mix(in oklab, var(--fg) 5%, transparent);
+  --glass: color-mix(in oklab, var(--bg) 78%, transparent);
+
+  /* type */
+  --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --font-sans: 'Manrope', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --hero-fs: clamp(3.4rem, 9.6vw, 10.5rem);
+
+  /* layout */
+  --container: 1480px;
+  --gutter: clamp(1.25rem, 4vw, 4.5rem);
+  --nav-h: 5.5rem;
+
+  /* motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out: cubic-bezier(0.76, 0, 0.24, 1);
+  --t-theme: 1s var(--ease-in-out);
+}
+
+:root.is-dark {
+  --bg: var(--espresso);
+  --fg: var(--ivory);
+  --accent: var(--gold);
+}
