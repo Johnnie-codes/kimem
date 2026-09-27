@@ -2,6 +2,7 @@
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useBag } from '@/composables/useBag'
 import { useScroll } from '@/composables/useScroll'
+import { activeSocials } from '@/data/site'
 
 const links = [
   { label: 'Collection', href: '#collection' },
@@ -108,7 +109,11 @@ onBeforeUnmount(() => {
       </nav>
       <div class="menu__foot">
         <span>Maison de Parfum</span>
-        <span>Instagram · Pinterest</span>
+        <span v-if="activeSocials.length" class="menu__socials">
+          <a v-for="s in activeSocials" :key="s.label" :href="s.url" target="_blank" rel="noopener">{{
+            s.label
+          }}</a>
+        </span>
       </div>
     </div>
   </Transition>
@@ -290,6 +295,10 @@ onBeforeUnmount(() => {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(244, 239, 230, 0.5);
+}
+.menu__socials {
+  display: flex;
+  gap: 1.25rem;
 }
 .menu-enter-active {
   transition: clip-path 0.9s var(--ease-in-out);

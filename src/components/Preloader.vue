@@ -33,6 +33,7 @@ onMounted(async () => {
   await new Promise((resolve) =>
     setTimeout(resolve, Math.max(0, MIN_MS - (performance.now() - started))),
   )
+  if (!root.value) return // unmounted while waiting (hot reload)
 
   gsap
     .timeline({ onComplete: () => emit('done') })

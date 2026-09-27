@@ -12,6 +12,17 @@ npm run build    # production build → dist/
 npm run preview  # serve the production build
 ```
 
+## Configure
+
+Business facts (contact email, currency, socials, order channel, batch numbers) live in
+`src/data/site.js`. Most can be set without touching code: copy `.env.example` to `.env`.
+Set `VITE_SITE_URL` before a production build so link previews get an absolute image URL.
+
+Info pages (shipping, returns, privacy…) are in `src/data/pages.js` and open at
+`#page-<id>`. **Their copy is a draft and must be reviewed before launch.**
+
+See `ROADMAP.md` for what is done and what is planned.
+
 ## Structure
 
 ```

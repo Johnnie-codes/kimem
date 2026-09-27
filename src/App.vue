@@ -15,6 +15,7 @@ import AtelierSection from '@/components/AtelierSection.vue'
 import CollectionSection from '@/components/CollectionSection.vue'
 import NewsletterSection from '@/components/NewsletterSection.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
+import PageSheet from '@/components/PageSheet.vue'
 
 const { init, stop, start } = useScroll()
 const { ready } = useAppState()
@@ -52,6 +53,7 @@ function onDone() {
   </main>
 
   <SiteFooter />
+  <PageSheet />
 
   <Transition name="toast">
     <div v-if="toast" :key="toast.id" class="toast" role="status" aria-live="polite">

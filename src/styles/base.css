@@ -282,3 +282,49 @@ p {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Dialogs sit in the browser's top layer, above the custom cursor, so give them the real one. */
+html.has-cursor dialog,
+html.has-cursor dialog * {
+  cursor: auto !important;
+}
+html.has-cursor dialog :is(a, button, label, select, [role='button']) {
+  cursor: pointer !important;
+}
+html.has-cursor dialog :is(input, textarea) {
+  cursor: text !important;
+}
+
+/* Shared bits for panels and forms */
+.sheet-title {
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  line-height: 1;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.field span {
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+.field input,
+.field textarea {
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--line-strong);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s;
+}
+.field input:focus,
+.field textarea:focus {
+  border-color: var(--fg);
+}
+.field textarea {
+  resize: vertical;
+  min-height: 4.5rem;
+}

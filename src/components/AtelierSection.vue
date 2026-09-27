@@ -1,11 +1,12 @@
 <script setup>
 import { images } from '@/data/images'
+import { site } from '@/data/site'
 import IconArrow from './IconArrow.vue'
 
 const stats = [
   { value: '100', unit: '%', label: 'refillable glass, forever' },
-  { value: '12', unit: 'wks', label: 'resting in the dark' },
-  { value: '200', unit: '', label: 'bottles per batch, numbered by hand' },
+  { value: String(site.batch.restWeeks), unit: 'wks', label: 'resting in the dark' },
+  { value: String(site.batch.size), unit: '', label: 'bottles per batch, numbered by hand' },
 ]
 </script>
 

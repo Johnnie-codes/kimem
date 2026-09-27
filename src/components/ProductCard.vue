@@ -1,5 +1,6 @@
 <script setup>
 import { useBag } from '@/composables/useBag'
+import { formatPrice } from '@/data/site'
 
 defineProps({
   product: { type: Object, required: true },
@@ -14,7 +15,7 @@ const { add } = useBag()
       <img :src="product.image.src" :alt="product.image.alt" loading="lazy" decoding="async" />
       <span v-if="product.tag" class="product__tag">{{ product.tag }}</span>
       <button type="button" class="product__add" @click="add(product)">
-        Add to bag <span class="product__add-price"><i>·</i> €{{ product.price }}</span>
+        Add to bag <span class="product__add-price"><i>·</i> {{ formatPrice(product.price) }}</span>
       </button>
     </div>
     <div class="product__info">
@@ -23,7 +24,7 @@ const { add } = useBag()
         <p class="product__kind">{{ product.kind }}</p>
         <p class="product__notes">{{ product.notes }}</p>
       </div>
-      <span class="product__price">€{{ product.price }}</span>
+      <span class="product__price">{{ formatPrice(product.price) }}</span>
     </div>
   </article>
 </template>

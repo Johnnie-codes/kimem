@@ -1,14 +1,52 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import { site } from '@/data/site'
 import IconArrow from './IconArrow.vue'
 
 const email = ref('')
-const status = ref('idle') // idle | error | sent
+const status = ref('idle') // idle | error | sending | sent | failed | mailed
 
-function submit() {
-  const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())
-  status.value = valid ? 'sent' : 'error'
+const valid = () => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())
+
+async function submit() {
+  if (status.value === 'sending') return
+  if (!valid()) {
+    status.value = 'error'
+    return
+  }
+
+  /* No signup service configured yet: hand it to the mail app instead of faking success. */
+  if (!site.newsletterUrl) {
+    const subject = encodeURIComponent('Add me to the Kimem letter')
+    const body = encodeURIComponent(`Please add ${email.value.trim()} to the letter.`)
+    window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`
+    status.value = 'mailed'
+    return
+  }
+
+  status.value = 'sending'
+  try {
+    const data = new FormData()
+    data.append('email', email.value.trim())
+    const res = await fetch(site.newsletterUrl, {
+      method: 'POST',
+      body: data,
+      headers: { Accept: 'application/json' },
+    })
+    status.value = res.ok ? 'sent' : 'failed'
+  } catch {
+    status.value = 'failed'
+  }
 }
+
+const hint = computed(
+  () =>
+    ({
+      error: 'Please enter a valid email address.',
+      failed: `That did not go through. Try again, or write to ${site.email}.`,
+      mailed: `Your mail app should have opened. If not, write to ${site.email}.`,
+    })[status.value] ?? 'By subscribing you agree to receive our letter. Unsubscribe any time.',
+)
 </script>
 
 <template>
@@ -28,7 +66,8 @@ function submit() {
         <form
           v-if="status !== 'sent'"
           class="newsletter__form"
-          :class="{ 'is-error': status === 'error' }"
+          :class="{ 'is-error': status === 'error' || status === 'failed' }"
+          :aria-busy="status === 'sending'"
           novalidate
           @submit.prevent="submit"
         >
@@ -42,17 +81,13 @@ function submit() {
             autocomplete="email"
             @input="status = 'idle'"
           />
-          <button type="submit" aria-label="Subscribe"><IconArrow /></button>
+          <button type="submit" aria-label="Subscribe" :disabled="status === 'sending'">
+            <IconArrow />
+          </button>
         </form>
         <p v-else class="newsletter__thanks">Thank you. The next letter will find you.</p>
 
-        <p class="newsletter__hint" aria-live="polite">
-          {{
-            status === 'error'
-              ? 'Please enter a valid email address.'
-              : 'By subscribing you agree to receive our letter. Unsubscribe any time.'
-          }}
-        </p>
+        <p class="newsletter__hint" aria-live="polite">{{ hint }}</p>
       </div>
     </div>
   </section>
@@ -113,6 +148,9 @@ function submit() {
 .newsletter__form button svg {
   width: 16px;
   height: 16px;
+}
+.newsletter__form button:disabled {
+  opacity: 0.4;
 }
 .newsletter__form button:hover {
   background: var(--fg);

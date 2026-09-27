@@ -34,8 +34,13 @@ function onAnchorClick(e) {
     e.preventDefault()
     return
   }
-  const el = document.querySelector(hash)
-  if (!el) return
+  let el = null
+  try {
+    el = document.querySelector(hash)
+  } catch {
+    return // not a valid selector: let the browser handle it
+  }
+  if (!el) return // e.g. #page-shipping, handled by the page sheet via hashchange
   e.preventDefault()
   scrollTo(el)
 }
@@ -73,6 +78,16 @@ function start() {
   }
 }
 
+/* Overlays can stack (bag → product), so scrolling resumes only when the last one closes. */
+let locks = 0
+function lock() {
+  if (locks++ === 0) stop()
+}
+function unlock() {
+  locks = Math.max(0, locks - 1)
+  if (locks === 0) start()
+}
+
 export function useScroll() {
-  return { lenis, init, scrollTo, stop, start }
+  return { lenis, init, scrollTo, stop, start, lock, unlock }
 }

@@ -1,10 +1,35 @@
 <script setup>
+import { activeSocials } from '@/data/site'
+import { pageHref } from '@/composables/usePageSheet'
+
 const year = new Date().getFullYear()
 
 const columns = [
-  { title: 'Shop', links: ['Collection', 'Refills', 'Gifting'] },
-  { title: 'Maison', links: ['Our story', 'The atelier', 'Journal', 'Stockists'] },
-  { title: 'Care', links: ['Contact', 'Shipping', 'Returns', 'Questions'] },
+  {
+    title: 'Shop',
+    links: [
+      { label: 'Collection', href: '#collection' },
+      { label: 'Refills', href: pageHref('refills') },
+      { label: 'Gifting', href: pageHref('gifting') },
+    ],
+  },
+  {
+    title: 'Maison',
+    links: [
+      { label: 'Our story', href: '#story' },
+      { label: 'The atelier', href: '#atelier' },
+      { label: 'The letter', href: '#letter' },
+    ],
+  },
+  {
+    title: 'Care',
+    links: [
+      { label: 'Contact', href: pageHref('contact') },
+      { label: 'Shipping', href: pageHref('shipping') },
+      { label: 'Returns', href: pageHref('returns') },
+      { label: 'Questions', href: pageHref('questions') },
+    ],
+  },
 ]
 </script>
 
@@ -18,13 +43,19 @@ const columns = [
         </div>
         <div v-for="c in columns" :key="c.title" class="footer__col">
           <h4>{{ c.title }}</h4>
-          <a v-for="l in c.links" :key="l" href="#">{{ l }}</a>
+          <a v-for="l in c.links" :key="l.href" :href="l.href">{{ l.label }}</a>
         </div>
       </div>
       <div class="footer__bottom">
         <span>© {{ year }} Kimem — Maison de Parfum</span>
-        <span class="footer__links"><a href="#">Instagram</a><a href="#">Pinterest</a></span>
-        <span class="footer__links"><a href="#">Privacy</a><a href="#">Terms</a></span>
+        <span v-if="activeSocials.length" class="footer__links">
+          <a v-for="s in activeSocials" :key="s.label" :href="s.url" target="_blank" rel="noopener">{{
+            s.label
+          }}</a>
+        </span>
+        <span class="footer__links">
+          <a :href="pageHref('privacy')">Privacy</a><a :href="pageHref('terms')">Terms</a>
+        </span>
       </div>
     </div>
     <div class="footer__giant" aria-hidden="true">Kimem</div>

@@ -1,6 +1,7 @@
 <script setup>
 import { products } from '@/data/products'
 import { images } from '@/data/images'
+import { site } from '@/data/site'
 import ProductCard from './ProductCard.vue'
 import IconArrow from './IconArrow.vue'
 </script>
@@ -37,10 +38,8 @@ import IconArrow from './IconArrow.vue'
         </div>
       </div>
 
-      <ul class="assurance" v-reveal>
-        <li>Complimentary shipping over €120</li>
-        <li>Refillable glass, forever</li>
-        <li>Two samples with every order</li>
+      <ul v-if="products.length && site.assurances.length" class="assurance" v-reveal>
+        <li v-for="a in site.assurances" :key="a">{{ a }}</li>
       </ul>
     </div>
   </section>
