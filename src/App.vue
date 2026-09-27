@@ -4,13 +4,11 @@ import { ScrollTrigger } from '@/lib/gsap'
 import { useScroll } from '@/composables/useScroll'
 import { useAppState } from '@/composables/useAppState'
 import { useBag } from '@/composables/useBag'
-import { ingredients } from '@/data/products'
 
 import Preloader from '@/components/Preloader.vue'
 import CustomCursor from '@/components/CustomCursor.vue'
 import SiteNav from '@/components/SiteNav.vue'
 import HeroSection from '@/components/HeroSection.vue'
-import MarqueeStrip from '@/components/MarqueeStrip.vue'
 import ManifestoSection from '@/components/ManifestoSection.vue'
 import NotesSection from '@/components/NotesSection.vue'
 import AtelierSection from '@/components/AtelierSection.vue'
@@ -46,7 +44,6 @@ function onDone() {
 
   <main id="main">
     <HeroSection />
-    <MarqueeStrip :items="ingredients" />
     <ManifestoSection />
     <NotesSection />
     <AtelierSection />

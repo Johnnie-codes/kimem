@@ -55,7 +55,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()))
           </div>
           <div class="notes__meta">
             <span>{{ pad(active + 1) }} — {{ pad(notes.length) }}</span>
-            <span>{{ notes[active].family }}</span>
+            <span>{{ notes[active].timing }}</span>
           </div>
         </div>
 
@@ -75,9 +75,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()))
             </div>
             <h3 class="note__title">{{ n.title }}</h3>
             <p class="note__text">{{ n.text }}</p>
-            <ul class="note__tags">
-              <li v-for="t in n.tags" :key="t">{{ t }}</li>
-            </ul>
+            <p class="note__timing">{{ n.timing }}</p>
           </article>
         </div>
       </div>
@@ -182,13 +180,9 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()))
   font-size: 1.05rem;
   color: var(--fg-2);
 }
-.note__tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+.note__timing {
+  align-self: flex-start;
   margin-top: 1.75rem;
-}
-.note__tags li {
   padding: 0.55rem 0.95rem;
   border: 1px solid var(--line-strong);
   border-radius: 999px;

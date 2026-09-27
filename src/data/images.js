@@ -4,6 +4,11 @@ import leaves from '@/assets/img/leaves-water.jpg'
 import smoke from '@/assets/img/resin-smoke.jpg'
 import bottles from '@/assets/img/bottles.jpg'
 
+/*
+ * Mood photography. These set the atmosphere of the page (hero, notes, atelier) and do
+ * not depict or name any Kimem fragrance, so never derive product names or notes from them.
+ * Real product imagery belongs on each product in products.js.
+ */
 export const images = {
   citrus: {
     src: citrus,

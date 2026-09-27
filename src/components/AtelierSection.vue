@@ -3,7 +3,7 @@ import { images } from '@/data/images'
 import IconArrow from './IconArrow.vue'
 
 const stats = [
-  { value: '48', unit: 'h', label: 'from harvest to first extraction' },
+  { value: '100', unit: '%', label: 'refillable glass, forever' },
   { value: '12', unit: 'wks', label: 'resting in the dark' },
   { value: '200', unit: '', label: 'bottles per batch, numbered by hand' },
 ]
@@ -31,9 +31,9 @@ const stats = [
         <p class="eyebrow">The atelier</p>
         <h2 class="section-title">Made slowly, <em>by hand.</em></h2>
         <p class="lead">
-          Leaves are washed in spring water the morning they are picked. Citrus is pressed cold,
-          never heated. Resins are burned, not extracted, so the smoke itself is captured. Every
-          batch rests in the dark for twelve weeks before a single bottle is filled.
+          Every composition is weighed, blended and bottled by hand, in batches small enough to
+          know each one by name. Every batch rests in the dark for twelve weeks before a single
+          bottle is filled.
         </p>
         <dl class="atelier__stats">
           <div v-for="s in stats" :key="s.label">

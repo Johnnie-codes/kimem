@@ -10,13 +10,14 @@ const { ready } = useAppState()
 const { scrollTo } = useScroll()
 const root = useTemplateRef('root')
 
-/* speed = scroll parallax, depth = pointer parallax */
+/* Mood images, not fragrances: captions describe a feeling, never a note or product.
+   speed = scroll parallax, depth = pointer parallax */
 const items = [
-  { key: 'citrus', image: images.citrus, num: '01', label: 'Neroli & blood orange', to: '#notes', speed: 0.35, depth: 0.9 },
-  { key: 'papaya', image: images.papaya, num: '02', label: 'Papaya, sun-ripened', to: '#notes', speed: 0.15, depth: 0.5 },
+  { key: 'citrus', image: images.citrus, num: '01', label: 'Warmth', to: '#notes', speed: 0.35, depth: 0.9 },
+  { key: 'papaya', image: images.papaya, num: '02', label: 'Ripeness', to: '#notes', speed: 0.15, depth: 0.5 },
   { key: 'bottles', image: images.bottles, num: 'Nº 01', label: 'The collection', to: '#collection', speed: 0.55, depth: 1.3 },
-  { key: 'leaves', image: images.leaves, num: '03', label: 'Leaves, washed at dawn', to: '#atelier', speed: 0.2, depth: 0.6 },
-  { key: 'smoke', image: images.smoke, num: '04', label: 'Resin & smoke', to: '#notes', speed: 0.4, depth: 1 },
+  { key: 'leaves', image: images.leaves, num: '03', label: 'Morning', to: '#atelier', speed: 0.2, depth: 0.6 },
+  { key: 'smoke', image: images.smoke, num: '04', label: 'Stillness', to: '#notes', speed: 0.4, depth: 1 },
 ]
 
 let ctx
@@ -125,8 +126,8 @@ onBeforeUnmount(() => {
       </p>
 
       <p class="hero__lede" data-hero>
-        Four compositions drawn from sun-warmed citrus, ripe fruit, freshly washed leaves and
-        slow-burning resin. Composed by hand, two hundred bottles at a time.
+        Small-batch fragrances made to be remembered rather than noticed. Composed by hand,
+        two hundred bottles at a time.
       </p>
 
       <h1 class="hero__title">
@@ -138,7 +139,7 @@ onBeforeUnmount(() => {
         </span>
       </h1>
 
-      <div class="hero__gallery" role="list" aria-label="Ingredients and the collection">
+      <div class="hero__gallery" role="list" aria-label="The world of Kimem">
         <figure
           v-for="item in items"
           :key="item.key"

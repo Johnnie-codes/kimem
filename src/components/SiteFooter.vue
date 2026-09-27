@@ -2,7 +2,7 @@
 const year = new Date().getFullYear()
 
 const columns = [
-  { title: 'Shop', links: ['Collection', 'Discovery set', 'Refills', 'Gifting'] },
+  { title: 'Shop', links: ['Collection', 'Refills', 'Gifting'] },
   { title: 'Maison', links: ['Our story', 'The atelier', 'Journal', 'Stockists'] },
   { title: 'Care', links: ['Contact', 'Shipping', 'Returns', 'Questions'] },
 ]

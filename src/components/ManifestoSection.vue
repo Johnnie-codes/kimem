@@ -23,8 +23,8 @@ import IconArrow from './IconArrow.vue'
       </h2>
       <div class="manifesto__meta">
         <p class="lead" v-reveal>
-          Kimem began with a single vial of blood-orange oil, pressed one August afternoon and
-          kept far too long. What remained was less a scent than a place. Every composition
+          Kimem began with a single vial, blended one August afternoon and kept far too
+          long. What remained was less a scent than a place. Every composition
           since has started the same way: with something worth keeping.
         </p>
         <a href="#atelier" class="link-arrow" v-reveal="{ delay: 0.15 }">

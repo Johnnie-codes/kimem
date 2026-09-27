@@ -22,7 +22,7 @@ src/
   directives/             v-reveal, v-reveal.group, v-split-words, v-parallax, v-magnetic, v-theme
   data/                   images, notes, products (all page copy lives here)
   styles/                 tokens.css (design tokens, light/dark themes), base.css
-  assets/img/             the five photographs
+  assets/img/             mood photography (atmosphere only, not products)
 ```
 
 ## How the page works
