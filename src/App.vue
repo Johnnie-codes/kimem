@@ -16,6 +16,9 @@ import CollectionSection from '@/components/CollectionSection.vue'
 import NewsletterSection from '@/components/NewsletterSection.vue'
 import SiteFooter from '@/components/SiteFooter.vue'
 import PageSheet from '@/components/PageSheet.vue'
+import BagDrawer from '@/components/BagDrawer.vue'
+import ProductDialog from '@/components/ProductDialog.vue'
+import ScentFinder from '@/components/ScentFinder.vue'
 
 const { init, stop, start } = useScroll()
 const { ready } = useAppState()
@@ -48,12 +51,15 @@ function onDone() {
     <ManifestoSection />
     <NotesSection />
     <AtelierSection />
+    <ScentFinder />
     <CollectionSection />
     <NewsletterSection />
   </main>
 
   <SiteFooter />
   <PageSheet />
+  <BagDrawer />
+  <ProductDialog />
 
   <Transition name="toast">
     <div v-if="toast" :key="toast.id" class="toast" role="status" aria-live="polite">

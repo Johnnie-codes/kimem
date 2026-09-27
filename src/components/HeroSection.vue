@@ -4,6 +4,7 @@ import { gsap, prefersReducedMotion } from '@/lib/gsap'
 import { useAppState } from '@/composables/useAppState'
 import { useScroll } from '@/composables/useScroll'
 import { images } from '@/data/images'
+import { moodByKey } from '@/data/moods'
 import IconArrow from './IconArrow.vue'
 
 const { ready } = useAppState()
@@ -13,11 +14,11 @@ const root = useTemplateRef('root')
 /* Mood images, not fragrances: captions describe a feeling, never a note or product.
    speed = scroll parallax, depth = pointer parallax */
 const items = [
-  { key: 'citrus', image: images.citrus, num: '01', label: 'Warmth', to: '#notes', speed: 0.35, depth: 0.9 },
-  { key: 'papaya', image: images.papaya, num: '02', label: 'Ripeness', to: '#notes', speed: 0.15, depth: 0.5 },
+  { key: 'citrus', image: images.citrus, num: '01', label: moodByKey.warmth.label, to: '#notes', speed: 0.35, depth: 0.9 },
+  { key: 'papaya', image: images.papaya, num: '02', label: moodByKey.ripeness.label, to: '#notes', speed: 0.15, depth: 0.5 },
   { key: 'bottles', image: images.bottles, num: 'Nº 01', label: 'The collection', to: '#collection', speed: 0.55, depth: 1.3 },
-  { key: 'leaves', image: images.leaves, num: '03', label: 'Morning', to: '#atelier', speed: 0.2, depth: 0.6 },
-  { key: 'smoke', image: images.smoke, num: '04', label: 'Stillness', to: '#notes', speed: 0.4, depth: 1 },
+  { key: 'leaves', image: images.leaves, num: '03', label: moodByKey.morning.label, to: '#atelier', speed: 0.2, depth: 0.6 },
+  { key: 'smoke', image: images.smoke, num: '04', label: moodByKey.stillness.label, to: '#notes', speed: 0.4, depth: 1 },
 ]
 
 let ctx

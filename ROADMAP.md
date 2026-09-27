@@ -16,15 +16,17 @@ Nothing on the page should look like it works when it doesn't.
 - [x] Preloader no longer crashes on hot reload
 - [x] One config file for business facts: `src/data/site.js`
 
-## Phase 2 — The shop
+## Phase 2 — The shop ✅
 
-- [ ] Bag drawer: quantities, remove, remembered between visits
-- [ ] Checkout hand-off by email, WhatsApp or Telegram (no payment processor yet)
-- [ ] Product quick view with the opening / heart / trail of each perfume
-- [ ] Engraving preview (initials on the bottle)
-- [ ] Batch counter ("Batch Nº 01 — 142 of 200 left")
-- [ ] Scent finder: pick moods, get a matching perfume
-- [ ] Demo products for development (`?demo`), never in a production build
+Everything here stays hidden until products exist. Try it now with `npm run dev` → `/?demo`.
+
+- [x] Bag drawer: quantities, remove, remembered between visits
+- [x] Checkout hand-off by email, WhatsApp or Telegram (no payment processor yet)
+- [x] Product quick view with the opening / heart / trail of each perfume
+- [x] Engraving preview (initials on the bottle)
+- [x] Batch counter ("Batch Nº 01 — 142 of 200 left")
+- [x] Scent finder: pick moods, get a matching perfume
+- [x] Demo products for development (`?demo`), never in a production build
 
 ## Phase 3 — Atmosphere
 

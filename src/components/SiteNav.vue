@@ -3,6 +3,7 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useBag } from '@/composables/useBag'
 import { useScroll } from '@/composables/useScroll'
 import { activeSocials } from '@/data/site'
+import { catalogue } from '@/data/catalogue'
 
 const links = [
   { label: 'Collection', href: '#collection' },
@@ -11,7 +12,8 @@ const links = [
 ]
 const menuLinks = [...links, { label: 'Maison', href: '#story' }, { label: 'The letter', href: '#letter' }]
 
-const { count } = useBag()
+const { count, openBag } = useBag()
+const hasShop = catalogue.length > 0
 const { stop, start } = useScroll()
 
 const scrolled = ref(false)
@@ -74,12 +76,18 @@ onBeforeUnmount(() => {
 
       <div class="nav__actions">
         <a href="#story" class="nav__link nav__link--secondary">Maison</a>
-        <a href="#collection" class="nav__link nav__bag">
+        <button
+          v-if="hasShop"
+          type="button"
+          class="nav__link nav__bag"
+          :aria-label="`Open bag, ${count} ${count === 1 ? 'item' : 'items'}`"
+          @click="openBag"
+        >
           Bag
           <Transition name="bump" mode="out-in">
             <sup :key="count">{{ count }}</sup>
           </Transition>
-        </a>
+        </button>
         <button
           class="nav__toggle"
           type="button"

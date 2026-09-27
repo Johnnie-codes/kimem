@@ -1,18 +1,28 @@
 <script setup>
 import { useBag } from '@/composables/useBag'
 import { formatPrice } from '@/data/site'
+import { useQuickView } from '@/composables/useQuickView'
 
 defineProps({
   product: { type: Object, required: true },
 })
 
 const { add } = useBag()
+const { show } = useQuickView()
 </script>
 
 <template>
   <article class="product" :class="{ 'product--feature': product.feature }">
     <div class="product__media">
-      <img :src="product.image.src" :alt="product.image.alt" loading="lazy" decoding="async" />
+      <button
+        type="button"
+        class="product__open"
+        data-cursor="View"
+        :aria-label="`View ${product.name}`"
+        @click="show(product)"
+      >
+        <img :src="product.image.src" :alt="product.image.alt" loading="lazy" decoding="async" />
+      </button>
       <span v-if="product.tag" class="product__tag">{{ product.tag }}</span>
       <button type="button" class="product__add" @click="add(product)">
         Add to bag <span class="product__add-price"><i>·</i> {{ formatPrice(product.price) }}</span>
@@ -20,7 +30,9 @@ const { add } = useBag()
     </div>
     <div class="product__info">
       <div>
-        <h3 class="product__name">{{ product.name }}</h3>
+        <h3 class="product__name">
+          <button type="button" @click="show(product)">{{ product.name }}</button>
+        </h3>
         <p class="product__kind">{{ product.kind }}</p>
         <p class="product__notes">{{ product.notes }}</p>
       </div>
@@ -52,13 +64,29 @@ const { add } = useBag()
   aspect-ratio: auto;
   min-height: 24rem;
 }
+.product__open {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.product__name button {
+  text-align: left;
+}
 .product__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   transition: transform 1.5s var(--ease-out);
 }
-.product:hover .product__media img {
+.product:hover .product__open {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.product__name button {
+  text-align: left;
+}
+.product__media img {
   transform: scale(1.05);
 }
 .product__tag {
@@ -112,7 +140,15 @@ const { add } = useBag()
   font-style: normal;
   color: var(--accent);
 }
-.product--feature .product__media img {
+.product--feature .product__open {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.product__name button {
+  text-align: left;
+}
+.product__media img {
   object-position: 50% 68%;
 }
 .product:hover .product__add,

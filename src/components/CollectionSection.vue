@@ -1,9 +1,10 @@
 <script setup>
-import { products } from '@/data/products'
+import { catalogue as products, batch, isDemo } from '@/data/catalogue'
 import { images } from '@/data/images'
 import { site } from '@/data/site'
 import ProductCard from './ProductCard.vue'
 import IconArrow from './IconArrow.vue'
+import BatchCounter from './BatchCounter.vue'
 </script>
 
 <template>
@@ -14,10 +15,13 @@ import IconArrow from './IconArrow.vue'
           <p class="eyebrow">The collection</p>
           <h2 class="section-title">Made to be kept. <em>One memory each.</em></h2>
         </div>
-        <p class="lead collection__lead">
-          Every bottle is hand-numbered and refillable, forever.
-        </p>
+        <div class="collection__side">
+          <p class="lead collection__lead">Every bottle is hand-numbered and refillable, forever.</p>
+          <BatchCounter v-if="batch && products.length" v-bind="batch" />
+        </div>
       </header>
+
+      <p v-if="isDemo" class="collection__demo">Demo products — development only</p>
 
       <div v-if="products.length" class="products" v-reveal.group="{ stagger: 0.12 }">
         <ProductCard v-for="p in products" :key="p.id" :product="p" />
@@ -48,6 +52,22 @@ import IconArrow from './IconArrow.vue'
 <style scoped>
 .collection {
   padding: clamp(6rem, 12vw, 11rem) 0 clamp(3rem, 6vw, 5rem);
+}
+.collection__side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+.collection__demo {
+  margin-bottom: 1.5rem;
+  padding: 0.6rem 1rem;
+  border: 1px dashed var(--accent);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 .collection__lead {
   max-width: 38ch;
