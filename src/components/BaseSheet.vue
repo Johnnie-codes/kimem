@@ -1,6 +1,7 @@
 <script setup>
 import { nextTick, onBeforeUnmount, useTemplateRef, watch } from 'vue'
 import { useScroll } from '@/composables/useScroll'
+import { useI18n } from '@/i18n'
 
 /*
  * Modal panel on a native <dialog>: the browser handles focus trapping, Escape and making
@@ -16,6 +17,7 @@ const emit = defineEmits(['close'])
 
 const dialog = useTemplateRef('dialog')
 const { lock, unlock } = useScroll()
+const { t } = useI18n()
 let locked = false
 let lastFocus = null
 
@@ -84,7 +86,7 @@ onBeforeUnmount(() => {
     @click="onBackdrop"
   >
     <div class="sheet__panel" data-lenis-prevent>
-      <button type="button" class="sheet__close" aria-label="Close" @click="emit('close')">
+      <button type="button" class="sheet__close" :aria-label="t('common.close')" @click="emit('close')">
         <span></span><span></span>
       </button>
       <slot />

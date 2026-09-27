@@ -2,10 +2,12 @@
 import { computed, ref, watch } from 'vue'
 import { useBag } from '@/composables/useBag'
 import { formatPrice } from '@/data/site'
-import { orderMessage, orderLink, channelLabel } from '@/lib/order'
+import { orderMessage, orderLink } from '@/lib/order'
+import { useI18n } from '@/i18n'
 import BaseSheet from './BaseSheet.vue'
 
 const { items, count, subtotal, open, closeBag, setQty, remove, clear } = useBag()
+const { t, tn } = useI18n()
 
 const note = ref('')
 const stage = ref('bag') // bag | sent
@@ -40,18 +42,18 @@ function finish() {
 </script>
 
 <template>
-  <BaseSheet :open="open" label="Your bag" @close="closeBag">
+  <BaseSheet :open="open" :label="t('bag.label')" @close="closeBag">
     <div class="bag">
       <header class="bag__head">
-        <p class="eyebrow">Your bag</p>
+        <p class="eyebrow">{{ t('bag.label') }}</p>
         <h2 class="sheet-title">
-          {{ stage === 'sent' ? 'Almost yours.' : count ? `${count} ${count === 1 ? 'bottle' : 'bottles'}` : 'Empty, for now.' }}
+          {{ stage === 'sent' ? t('bag.sentTitle') : count ? tn('bag.bottles', count) : t('bag.empty') }}
         </h2>
       </header>
 
       <template v-if="stage === 'bag'">
         <p v-if="!items.length" class="bag__empty">
-          Nothing here yet. Open a perfume in the collection to add it.
+          {{ t('bag.emptyText') }}
         </p>
 
         <ul v-else class="bag__lines">
@@ -60,14 +62,14 @@ function finish() {
             <div class="line__info">
               <p class="line__name">{{ l.product.name }}</p>
               <p class="line__meta">{{ l.product.kind }}</p>
-              <p v-if="l.engraving" class="line__meta">Engraved <em>{{ l.engraving }}</em></p>
+              <p v-if="l.engraving" class="line__meta">{{ t('bag.engraved') }} <em>{{ l.engraving }}</em></p>
               <div class="line__row">
-                <div class="line__qty" role="group" :aria-label="`Quantity of ${l.product.name}`">
-                  <button type="button" aria-label="One fewer" @click="setQty(l.key, l.qty - 1)">−</button>
+                <div class="line__qty" role="group" :aria-label="t('common.quantityOf', { name: l.product.name })">
+                  <button type="button" :aria-label="t('common.fewer')" @click="setQty(l.key, l.qty - 1)">−</button>
                   <output>{{ l.qty }}</output>
-                  <button type="button" aria-label="One more" @click="setQty(l.key, l.qty + 1)">+</button>
+                  <button type="button" :aria-label="t('common.more')" @click="setQty(l.key, l.qty + 1)">+</button>
                 </div>
-                <button type="button" class="line__remove" @click="remove(l.key)">Remove</button>
+                <button type="button" class="line__remove" @click="remove(l.key)">{{ t('bag.remove') }}</button>
               </div>
             </div>
             <span class="line__price">{{ formatPrice(l.product.price * l.qty) }}</span>
@@ -76,35 +78,27 @@ function finish() {
 
         <footer v-if="items.length" class="bag__foot">
           <label class="field">
-            <span>Note for us (optional)</span>
-            <textarea v-model="note" rows="2" maxlength="400" placeholder="Card message, delivery details…"></textarea>
+            <span>{{ t('bag.note') }}</span>
+            <textarea v-model="note" rows="2" maxlength="400" :placeholder="t('bag.notePlaceholder')"></textarea>
           </label>
-          <p class="bag__total"><span>Subtotal</span>{{ formatPrice(subtotal) }}</p>
+          <p class="bag__total"><span>{{ t('bag.subtotal') }}</span>{{ formatPrice(subtotal) }}</p>
           <button type="button" class="btn btn--solid bag__cta" @click="checkout">
-            Order by {{ channelLabel[link.channel] }}
+            {{ t('bag.orderBy', { channel: t(`bag.channels.${link.channel}`) }) }}
           </button>
-          <p class="bag__small">
-            No payment is taken here. Your order goes to us as a message; we reply to confirm
-            availability, delivery and how to pay.
-          </p>
+          <p class="bag__small">{{ t('bag.noPayment') }}</p>
         </footer>
       </template>
 
       <div v-else class="bag__sent">
         <p v-if="link.channel === 'telegram'">
-          {{ copied ? 'Your order is copied.' : 'Copy your order below,' }} Paste it into the Telegram chat that just
-          opened and we will reply there.
+          {{ copied ? t('bag.sentTelegramCopied') : t('bag.sentTelegram') }}
         </p>
-        <p v-else-if="link.channel === 'whatsapp'">
-          WhatsApp should have opened with your order written out. Press send and we will reply there.
-        </p>
-        <p v-else>
-          Your email app should have opened with your order written out. Send it and we will reply to confirm.
-        </p>
+        <p v-else-if="link.channel === 'whatsapp'">{{ t('bag.sentWhatsapp') }}</p>
+        <p v-else>{{ t('bag.sentEmail') }}</p>
         <pre class="bag__message">{{ orderMessage(items, subtotal, note) }}</pre>
         <div class="bag__actions">
-          <button type="button" class="btn btn--solid" @click="finish">Done, clear my bag</button>
-          <button type="button" class="link-arrow" @click="stage = 'bag'">Back to bag</button>
+          <button type="button" class="btn btn--solid" @click="finish">{{ t('bag.done') }}</button>
+          <button type="button" class="link-arrow" @click="stage = 'bag'">{{ t('bag.back') }}</button>
         </div>
       </div>
     </div>

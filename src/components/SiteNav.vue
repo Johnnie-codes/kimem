@@ -1,16 +1,25 @@
 <script setup>
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useBag } from '@/composables/useBag'
 import { useScroll } from '@/composables/useScroll'
 import { activeSocials } from '@/data/site'
 import { catalogue } from '@/data/catalogue'
+import { useI18n } from '@/i18n'
+import { useAmbient } from '@/composables/useAmbient'
 
-const links = [
-  { label: 'Collection', href: '#collection' },
-  { label: 'Notes', href: '#notes' },
-  { label: 'Atelier', href: '#atelier' },
-]
-const menuLinks = [...links, { label: 'Maison', href: '#story' }, { label: 'The letter', href: '#letter' }]
+const { t, locale, locales, setLocale } = useI18n()
+const { playing, toggle: toggleSound } = useAmbient()
+
+const links = computed(() => [
+  { label: t('nav.collection'), href: '#collection' },
+  { label: t('nav.notes'), href: '#notes' },
+  { label: t('nav.atelier'), href: '#atelier' },
+])
+const menuLinks = computed(() => [
+  ...links.value,
+  { label: t('nav.maison'), href: '#story' },
+  { label: t('nav.letter'), href: '#letter' },
+])
 
 const { count, openBag } = useBag()
 const hasShop = catalogue.length > 0
@@ -68,22 +77,49 @@ onBeforeUnmount(() => {
     :class="{ 'is-scrolled': scrolled && !menuOpen, 'is-hidden': hidden, 'is-menu': menuOpen }"
   >
     <div class="container nav__inner">
-      <nav class="nav__links" aria-label="Primary">
+      <nav class="nav__links" :aria-label="t('nav.primary')">
         <a v-for="l in links" :key="l.href" :href="l.href" class="nav__link">{{ l.label }}</a>
       </nav>
 
-      <a href="#top" class="nav__brand" aria-label="Kimem — back to top">Kimem</a>
+      <a href="#top" class="nav__brand" :aria-label="t('nav.backToTop')">Kimem</a>
 
       <div class="nav__actions">
-        <a href="#story" class="nav__link nav__link--secondary">Maison</a>
+        <div class="nav__prefs nav__link--secondary">
+          <div class="lang" role="group" :aria-label="t('common.language')">
+            <button
+              v-for="l in locales"
+              :key="l.code"
+              type="button"
+              class="lang__btn"
+              :class="{ 'is-on': locale === l.code }"
+              :aria-pressed="locale === l.code"
+              :lang="l.code"
+              :title="l.name"
+              @click="setLocale(l.code)"
+            >
+              {{ l.label }}
+            </button>
+          </div>
+          <button
+            type="button"
+            class="sound"
+            :class="{ 'is-on': playing }"
+            :aria-pressed="playing"
+            :aria-label="playing ? t('nav.soundOff') : t('nav.soundOn')"
+            :title="playing ? t('nav.soundOff') : t('nav.soundOn')"
+            @click="toggleSound"
+          >
+            <i></i><i></i><i></i><i></i>
+          </button>
+        </div>
         <button
           v-if="hasShop"
           type="button"
           class="nav__link nav__bag"
-          :aria-label="`Open bag, ${count} ${count === 1 ? 'item' : 'items'}`"
+          :aria-label="t(count === 1 ? 'nav.bagLabel_one' : 'nav.bagLabel_other', { n: count })"
           @click="openBag"
         >
-          Bag
+          {{ t('nav.bag') }}
           <Transition name="bump" mode="out-in">
             <sup :key="count">{{ count }}</sup>
           </Transition>
@@ -93,7 +129,7 @@ onBeforeUnmount(() => {
           type="button"
           :aria-expanded="menuOpen"
           aria-controls="menu"
-          :aria-label="menuOpen ? 'Close menu' : 'Open menu'"
+          :aria-label="menuOpen ? t('nav.closeMenu') : t('nav.openMenu')"
           @click="toggle"
         >
           <span></span><span></span>
@@ -104,7 +140,7 @@ onBeforeUnmount(() => {
 
   <Transition name="menu">
     <div v-if="menuOpen" id="menu" class="menu">
-      <nav class="menu__links" aria-label="Menu">
+      <nav class="menu__links" :aria-label="t('nav.menu')">
         <a
           v-for="(l, i) in menuLinks"
           :key="l.href"
@@ -116,7 +152,22 @@ onBeforeUnmount(() => {
         </a>
       </nav>
       <div class="menu__foot">
-        <span>Maison de Parfum</span>
+        <span class="menu__prefs">
+          <button
+            v-for="l in locales"
+            :key="l.code"
+            type="button"
+            :class="{ 'is-on': locale === l.code }"
+            :aria-pressed="locale === l.code"
+            :lang="l.code"
+            @click="setLocale(l.code)"
+          >
+            {{ l.name }}
+          </button>
+          <button type="button" :aria-pressed="playing" @click="toggleSound">
+            {{ t('nav.sound') }} {{ playing ? '●' : '○' }}
+          </button>
+        </span>
         <span v-if="activeSocials.length" class="menu__socials">
           <a v-for="s in activeSocials" :key="s.label" :href="s.url" target="_blank" rel="noopener">{{
             s.label
@@ -216,6 +267,67 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 2.25rem;
 }
+.nav__prefs {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.lang {
+  display: flex;
+  gap: 0.2rem;
+}
+.lang__btn {
+  padding: 0.25rem 0.35rem;
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  opacity: 0.45;
+  transition: opacity 0.3s;
+}
+.lang__btn:hover,
+.lang__btn.is-on {
+  opacity: 1;
+}
+.lang__btn:lang(am) {
+  letter-spacing: 0;
+}
+/* sound: four bars, still when off, breathing when on */
+.sound {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+  padding: 0 0.2rem;
+  box-sizing: content-box;
+}
+.sound i {
+  width: 2px;
+  height: 3px;
+  background: currentColor;
+  opacity: 0.6;
+  transition: height 0.4s var(--ease-out);
+}
+.sound.is-on i {
+  opacity: 1;
+  animation: bars 1.4s var(--ease-in-out) infinite alternate;
+}
+.sound.is-on i:nth-child(2) {
+  animation-delay: -0.5s;
+}
+.sound.is-on i:nth-child(3) {
+  animation-delay: -0.9s;
+}
+.sound.is-on i:nth-child(4) {
+  animation-delay: -0.2s;
+}
+@keyframes bars {
+  from {
+    height: 3px;
+  }
+  to {
+    height: 14px;
+  }
+}
 .nav__bag sup {
   display: inline-block;
   font-family: var(--font-display);
@@ -303,6 +415,19 @@ onBeforeUnmount(() => {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(244, 239, 230, 0.5);
+}
+.menu__prefs {
+  display: flex;
+  gap: 1.25rem;
+}
+.menu__prefs button {
+  font-size: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+}
+.menu__prefs .is-on {
+  color: var(--ivory);
 }
 .menu__socials {
   display: flex;

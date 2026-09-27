@@ -1,25 +1,28 @@
 <script setup>
 /* Opening, heart and trail of one perfume as three stacked tiers, widest at the base. */
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 defineProps({
   pyramid: { type: Object, required: true },
 })
 const tiers = [
-  { key: 'top', label: 'Opening', width: 58 },
-  { key: 'heart', label: 'Heart', width: 78 },
-  { key: 'base', label: 'Trail', width: 100 },
+  { key: 'top', label: 'product.opening', width: 58 },
+  { key: 'heart', label: 'product.heart', width: 78 },
+  { key: 'base', label: 'product.trail', width: 100 },
 ]
 </script>
 
 <template>
   <ol class="pyramid">
     <li
-      v-for="(t, i) in tiers"
-      :key="t.key"
+      v-for="(tier, i) in tiers"
+      :key="tier.key"
       class="pyramid__tier"
-      :style="{ '--w': `${t.width}%`, '--i': i }"
+      :style="{ '--w': `${tier.width}%`, '--i': i }"
     >
-      <span class="pyramid__label">{{ t.label }}</span>
-      <span class="pyramid__notes">{{ (pyramid[t.key] || []).join(' · ') || '—' }}</span>
+      <span class="pyramid__label">{{ t(tier.label) }}</span>
+      <span class="pyramid__notes">{{ (pyramid[tier.key] || []).join(' · ') || '—' }}</span>
     </li>
   </ol>
 </template>

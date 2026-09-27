@@ -1,9 +1,10 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { nextTick, onMounted, ref, watch } from 'vue'
 import { ScrollTrigger } from '@/lib/gsap'
 import { useScroll } from '@/composables/useScroll'
 import { useAppState } from '@/composables/useAppState'
 import { useBag } from '@/composables/useBag'
+import { useI18n } from '@/i18n'
 
 import Preloader from '@/components/Preloader.vue'
 import CustomCursor from '@/components/CustomCursor.vue'
@@ -23,6 +24,13 @@ import ScentFinder from '@/components/ScentFinder.vue'
 const { init, stop, start } = useScroll()
 const { ready } = useAppState()
 const { toast } = useBag()
+const { t, locale } = useI18n()
+
+/* <main> re-mounts per language (see its :key) so split text and reveals rebuild cleanly */
+watch(locale, async () => {
+  await nextTick()
+  ScrollTrigger.refresh()
+})
 const loading = ref(true)
 
 onMounted(() => {
@@ -46,7 +54,7 @@ function onDone() {
   <CustomCursor />
   <SiteNav />
 
-  <main id="main">
+  <main id="main" :key="locale">
     <HeroSection />
     <ManifestoSection />
     <NotesSection />
@@ -64,7 +72,7 @@ function onDone() {
   <Transition name="toast">
     <div v-if="toast" :key="toast.id" class="toast" role="status" aria-live="polite">
       <span class="toast__dot"></span>
-      Added to bag
+      {{ t('common.addedToBag') }}
       <em>{{ toast.name }}</em>
     </div>
   </Transition>

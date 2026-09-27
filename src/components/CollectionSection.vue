@@ -1,10 +1,12 @@
 <script setup>
 import { catalogue as products, batch, isDemo } from '@/data/catalogue'
 import { images } from '@/data/images'
-import { site } from '@/data/site'
+import { useI18n } from '@/i18n'
 import ProductCard from './ProductCard.vue'
 import IconArrow from './IconArrow.vue'
 import BatchCounter from './BatchCounter.vue'
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -12,16 +14,16 @@ import BatchCounter from './BatchCounter.vue'
     <div class="container">
       <header class="section-head" v-reveal.group>
         <div>
-          <p class="eyebrow">The collection</p>
-          <h2 class="section-title">Made to be kept. <em>One memory each.</em></h2>
+          <p class="eyebrow">{{ t('collection.eyebrow') }}</p>
+          <h2 class="section-title">{{ t('collection.titleA') }} <em>{{ t('collection.titleB') }}</em></h2>
         </div>
         <div class="collection__side">
-          <p class="lead collection__lead">Every bottle is hand-numbered and refillable, forever.</p>
+          <p class="lead collection__lead">{{ t('collection.lead') }}</p>
           <BatchCounter v-if="batch && products.length" v-bind="batch" />
         </div>
       </header>
 
-      <p v-if="isDemo" class="collection__demo">Demo products — development only</p>
+      <p v-if="isDemo" class="collection__demo">{{ t('collection.demo') }}</p>
 
       <div v-if="products.length" class="products" v-reveal.group="{ stagger: 0.12 }">
         <ProductCard v-for="p in products" :key="p.id" :product="p" />
@@ -32,18 +34,15 @@ import BatchCounter from './BatchCounter.vue'
           <img :src="images.bottles.src" :alt="images.bottles.alt" loading="lazy" decoding="async" />
         </div>
         <div class="soon__body">
-          <p class="eyebrow">Collection Nº 01</p>
-          <p class="soon__title">The first compositions <em>are resting.</em></p>
-          <p class="lead">
-            They will be released in a single numbered batch. Join the letter to hear the day
-            they are ready.
-          </p>
-          <a href="#letter" class="link-arrow">Receive the first drop <IconArrow /></a>
+          <p class="eyebrow">{{ t('collection.soonEyebrow') }}</p>
+          <p class="soon__title">{{ t('collection.soonA') }} <em>{{ t('collection.soonB') }}</em></p>
+          <p class="lead">{{ t('collection.soonLead') }}</p>
+          <a href="#letter" class="link-arrow">{{ t('collection.soonLink') }} <IconArrow /></a>
         </div>
       </div>
 
-      <ul v-if="products.length && site.assurances.length" class="assurance" v-reveal>
-        <li v-for="a in site.assurances" :key="a">{{ a }}</li>
+      <ul v-if="products.length" class="assurance" v-reveal>
+        <li v-for="a in t('collection.assurances')" :key="a">{{ a }}</li>
       </ul>
     </div>
   </section>

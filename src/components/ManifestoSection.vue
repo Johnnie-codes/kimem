@@ -1,5 +1,16 @@
 <script setup>
+import { computed } from 'vue'
+import { useI18n } from '@/i18n'
 import IconArrow from './IconArrow.vue'
+
+const { t } = useI18n()
+/* `*word*` in the copy marks the italic word */
+const parts = computed(() =>
+  t('manifesto.text')
+    .split(/(\*[^*]+\*)/)
+    .filter(Boolean)
+    .map((p) => (p.startsWith('*') ? { em: true, text: p.slice(1, -1) } : { text: p })),
+)
 </script>
 
 <template>
@@ -11,24 +22,23 @@ import IconArrow from './IconArrow.vue'
             <path id="seal-path" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0" />
           </defs>
           <text textLength="462" lengthAdjust="spacing">
-            <textPath href="#seal-path">Kimem · Maison de Parfum · Composed from memory ·</textPath>
+            <textPath href="#seal-path">{{ t('manifesto.seal') }}</textPath>
           </text>
         </svg>
         <span>✦</span>
       </div>
-      <p class="eyebrow" v-reveal>The maison</p>
+      <p class="eyebrow" v-reveal>{{ t('manifesto.eyebrow') }}</p>
       <h2 class="manifesto__text" v-split-words>
-        We don't compose perfumes to be noticed. We compose them to be
-        <em>remembered</em> — the way a room keeps the trace of whoever left it last.
+        <template v-for="(p, i) in parts" :key="i"><em v-if="p.em">{{ p.text }}</em
+          ><template v-else>{{ p.text }}</template></template
+        >
       </h2>
       <div class="manifesto__meta">
         <p class="lead" v-reveal>
-          Kimem began with a single vial, blended one August afternoon and kept far too
-          long. What remained was less a scent than a place. Every composition
-          since has started the same way: with something worth keeping.
+          {{ t('manifesto.lead') }}
         </p>
         <a href="#atelier" class="link-arrow" v-reveal="{ delay: 0.15 }">
-          How we work <IconArrow />
+          {{ t('manifesto.link') }} <IconArrow />
         </a>
       </div>
     </div>

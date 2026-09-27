@@ -1,6 +1,9 @@
 <script setup>
 import { computed, onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import { prefersReducedMotion } from '@/lib/gsap'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   number: { type: Number, required: true },
@@ -65,9 +68,9 @@ onBeforeUnmount(() => {
       />
     </svg>
     <p>
-      <span class="batch__label">Batch Nº {{ String(number).padStart(2, '0') }}</span>
+      <span class="batch__label">{{ t('batch.label', { n: String(number).padStart(2, '0') }) }}</span>
       <span class="batch__count">
-        <strong>{{ shownLeft }}</strong> of {{ size }} bottles left
+        <strong>{{ shownLeft }}</strong> {{ t('batch.left', { size }) }}
       </span>
     </p>
   </div>

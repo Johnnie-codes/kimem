@@ -1,12 +1,15 @@
 <script setup>
 /* A drawn Kimem bottle with the customer's initials etched into the glass. */
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 defineProps({
   initials: { type: String, default: '' },
 })
 </script>
 
 <template>
-  <svg class="bottle" viewBox="0 0 200 280" role="img" :aria-label="initials ? `Bottle engraved ${initials}` : 'Bottle, not engraved'">
+  <svg class="bottle" viewBox="0 0 200 280" role="img" :aria-label="initials ? t('product.bottleEngraved', { initials }) : t('product.bottlePlain')">
     <defs>
       <linearGradient id="bp-juice" x1="0" y1="0" x2="0" y2="1">
         <stop offset="0" stop-color="#d9a863" />

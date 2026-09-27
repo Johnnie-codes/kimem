@@ -1,33 +1,36 @@
 <script setup>
 import { activeSocials } from '@/data/site'
 import { pageHref } from '@/composables/usePageSheet'
+import { useI18n } from '@/i18n'
 
+const { t } = useI18n()
 const year = new Date().getFullYear()
 
+/* labels are i18n keys */
 const columns = [
   {
-    title: 'Shop',
+    title: 'footer.shop',
     links: [
-      { label: 'Collection', href: '#collection' },
-      { label: 'Refills', href: pageHref('refills') },
-      { label: 'Gifting', href: pageHref('gifting') },
+      { label: 'footer.collection', href: '#collection' },
+      { label: 'pages.refills.title', href: pageHref('refills') },
+      { label: 'pages.gifting.title', href: pageHref('gifting') },
     ],
   },
   {
-    title: 'Maison',
+    title: 'footer.maison',
     links: [
-      { label: 'Our story', href: '#story' },
-      { label: 'The atelier', href: '#atelier' },
-      { label: 'The letter', href: '#letter' },
+      { label: 'footer.story', href: '#story' },
+      { label: 'footer.atelier', href: '#atelier' },
+      { label: 'footer.letter', href: '#letter' },
     ],
   },
   {
-    title: 'Care',
+    title: 'footer.care',
     links: [
-      { label: 'Contact', href: pageHref('contact') },
-      { label: 'Shipping', href: pageHref('shipping') },
-      { label: 'Returns', href: pageHref('returns') },
-      { label: 'Questions', href: pageHref('questions') },
+      { label: 'pages.contact.title', href: pageHref('contact') },
+      { label: 'pages.shipping.title', href: pageHref('shipping') },
+      { label: 'pages.returns.title', href: pageHref('returns') },
+      { label: 'pages.questions.title', href: pageHref('questions') },
     ],
   },
 ]
@@ -39,22 +42,23 @@ const columns = [
       <div class="footer__top">
         <div class="footer__brand">
           <a href="#top" class="footer__wordmark">Kimem</a>
-          <p>Maison de parfum. Small batches, composed from memory.</p>
+          <p>{{ t('footer.tagline') }}</p>
         </div>
         <div v-for="c in columns" :key="c.title" class="footer__col">
-          <h4>{{ c.title }}</h4>
-          <a v-for="l in c.links" :key="l.href" :href="l.href">{{ l.label }}</a>
+          <h4>{{ t(c.title) }}</h4>
+          <a v-for="l in c.links" :key="l.href" :href="l.href">{{ t(l.label) }}</a>
         </div>
       </div>
       <div class="footer__bottom">
-        <span>© {{ year }} Kimem — Maison de Parfum</span>
+        <span>{{ t('footer.rights', { year }) }}</span>
         <span v-if="activeSocials.length" class="footer__links">
           <a v-for="s in activeSocials" :key="s.label" :href="s.url" target="_blank" rel="noopener">{{
             s.label
           }}</a>
         </span>
         <span class="footer__links">
-          <a :href="pageHref('privacy')">Privacy</a><a :href="pageHref('terms')">Terms</a>
+          <a :href="pageHref('privacy')">{{ t('pages.privacy.title') }}</a
+          ><a :href="pageHref('terms')">{{ t('pages.terms.title') }}</a>
         </span>
       </div>
     </div>

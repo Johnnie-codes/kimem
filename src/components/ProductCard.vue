@@ -2,6 +2,7 @@
 import { useBag } from '@/composables/useBag'
 import { formatPrice } from '@/data/site'
 import { useQuickView } from '@/composables/useQuickView'
+import { useI18n } from '@/i18n'
 
 defineProps({
   product: { type: Object, required: true },
@@ -9,6 +10,7 @@ defineProps({
 
 const { add } = useBag()
 const { show } = useQuickView()
+const { t } = useI18n()
 </script>
 
 <template>
@@ -17,15 +19,15 @@ const { show } = useQuickView()
       <button
         type="button"
         class="product__open"
-        data-cursor="View"
-        :aria-label="`View ${product.name}`"
+        :data-cursor="t('common.view')"
+        :aria-label="t('common.viewProduct', { name: product.name })"
         @click="show(product)"
       >
         <img :src="product.image.src" :alt="product.image.alt" loading="lazy" decoding="async" />
       </button>
       <span v-if="product.tag" class="product__tag">{{ product.tag }}</span>
       <button type="button" class="product__add" @click="add(product)">
-        Add to bag <span class="product__add-price"><i>·</i> {{ formatPrice(product.price) }}</span>
+        {{ t('common.addToBag') }} <span class="product__add-price"><i>·</i> {{ formatPrice(product.price) }}</span>
       </button>
     </div>
     <div class="product__info">

@@ -1,8 +1,10 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { site } from '@/data/site'
+import { useI18n } from '@/i18n'
 import IconArrow from './IconArrow.vue'
 
+const { t } = useI18n()
 const email = ref('')
 const status = ref('idle') // idle | error | sending | sent | failed | mailed
 
@@ -17,8 +19,8 @@ async function submit() {
 
   /* No signup service configured yet: hand it to the mail app instead of faking success. */
   if (!site.newsletterUrl) {
-    const subject = encodeURIComponent('Add me to the Kimem letter')
-    const body = encodeURIComponent(`Please add ${email.value.trim()} to the letter.`)
+    const subject = encodeURIComponent(t('letter.mailSubject'))
+    const body = encodeURIComponent(t('letter.mailBody', { email: email.value.trim() }))
     window.location.href = `mailto:${site.email}?subject=${subject}&body=${body}`
     status.value = 'mailed'
     return
@@ -39,28 +41,23 @@ async function submit() {
   }
 }
 
-const hint = computed(
-  () =>
-    ({
-      error: 'Please enter a valid email address.',
-      failed: `That did not go through. Try again, or write to ${site.email}.`,
-      mailed: `Your mail app should have opened. If not, write to ${site.email}.`,
-    })[status.value] ?? 'By subscribing you agree to receive our letter. Unsubscribe any time.',
-)
+const hint = computed(() => {
+  const key = { error: 'invalid', failed: 'failed', mailed: 'mailed' }[status.value] ?? 'hint'
+  return t(`letter.${key}`, { email: site.email })
+})
 </script>
 
 <template>
   <section id="letter" class="newsletter" v-theme="'light'">
     <div class="container newsletter__inner">
       <div v-reveal.group>
-        <p class="eyebrow">The letter</p>
-        <h2 class="section-title newsletter__title">Receive the <em>first drop.</em></h2>
+        <p class="eyebrow">{{ t('letter.eyebrow') }}</p>
+        <h2 class="section-title newsletter__title">{{ t('letter.titleA') }} <em>{{ t('letter.titleB') }}</em></h2>
       </div>
 
       <div class="newsletter__side" v-reveal="{ delay: 0.15 }">
         <p class="lead">
-          One letter a month. New compositions, notes from the atelier, and early access to
-          each batch. Never more than that.
+          {{ t('letter.lead') }}
         </p>
 
         <form
@@ -71,21 +68,21 @@ const hint = computed(
           novalidate
           @submit.prevent="submit"
         >
-          <label class="sr-only" for="newsletter-email">Email address</label>
+          <label class="sr-only" for="newsletter-email">{{ t('letter.label') }}</label>
           <input
             id="newsletter-email"
             v-model="email"
             type="email"
             name="email"
-            placeholder="Your email"
+            :placeholder="t('letter.placeholder')"
             autocomplete="email"
             @input="status = 'idle'"
           />
-          <button type="submit" aria-label="Subscribe" :disabled="status === 'sending'">
+          <button type="submit" :aria-label="t('letter.submit')" :disabled="status === 'sending'">
             <IconArrow />
           </button>
         </form>
-        <p v-else class="newsletter__thanks">Thank you. The next letter will find you.</p>
+        <p v-else class="newsletter__thanks">{{ t('letter.thanks') }}</p>
 
         <p class="newsletter__hint" aria-live="polite">{{ hint }}</p>
       </div>

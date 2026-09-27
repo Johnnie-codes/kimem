@@ -4,12 +4,14 @@ import { useQuickView } from '@/composables/useQuickView'
 import { useBag } from '@/composables/useBag'
 import { formatPrice } from '@/data/site'
 import { moodByKey } from '@/data/moods'
+import { useI18n } from '@/i18n'
 import BaseSheet from './BaseSheet.vue'
 import NotePyramid from './NotePyramid.vue'
 import BottlePreview from './BottlePreview.vue'
 
 const { product, hide } = useQuickView()
 const { add, openBag } = useBag()
+const { t } = useI18n()
 
 /* keep the last product rendered while the dialog animates out */
 const shown = ref(null)
@@ -44,13 +46,13 @@ function addToBag() {
 </script>
 
 <template>
-  <BaseSheet :open="Boolean(product)" side="center" :label="shown?.name ?? 'Product'" @close="hide">
+  <BaseSheet :open="Boolean(product)" side="center" :label="shown?.name ?? ''" @close="hide">
     <article v-if="shown" class="pd">
       <div class="pd__media">
         <Transition name="swap" mode="out-in">
           <div v-if="engrave" key="bottle" class="pd__bottle">
             <BottlePreview :initials="initials" />
-            <p>Preview. The engraving is cut by hand, so every one is slightly different.</p>
+            <p>{{ t('product.engravePreview') }}</p>
           </div>
           <img v-else key="photo" :src="shown.image.src" :alt="shown.image.alt" />
         </Transition>
@@ -62,8 +64,8 @@ function addToBag() {
         <p class="pd__kind">{{ shown.kind }}</p>
         <p v-if="shown.description" class="pd__desc">{{ shown.description }}</p>
 
-        <ul v-if="moodsFor.length" class="pd__moods" aria-label="Moods">
-          <li v-for="m in moodsFor" :key="m.key">{{ m.label }}</li>
+        <ul v-if="moodsFor.length" class="pd__moods" :aria-label="t('product.moods')">
+          <li v-for="m in moodsFor" :key="m.key">{{ t(`moods.${m.key}.label`) }}</li>
         </ul>
 
         <NotePyramid v-if="shown.pyramid" :pyramid="shown.pyramid" class="pd__pyramid" />
@@ -72,30 +74,30 @@ function addToBag() {
         <div v-if="shown.engravable" class="pd__engrave">
           <label class="pd__toggle">
             <input v-model="engrave" type="checkbox" />
-            <span>Engrave initials on the bottle</span>
+            <span>{{ t('product.engrave') }}</span>
           </label>
           <label v-if="engrave" class="field">
-            <span>Up to three letters</span>
+            <span>{{ t('product.engraveHint') }}</span>
             <input
               :value="initials"
               type="text"
               inputmode="text"
               autocomplete="off"
               maxlength="6"
-              placeholder="e.g. AMK"
+              :placeholder="t('product.engravePlaceholder')"
               @input="onInitials"
             />
           </label>
         </div>
 
         <div class="pd__buy">
-          <div class="pd__qty" role="group" aria-label="Quantity">
-            <button type="button" aria-label="One fewer" :disabled="qty <= 1" @click="qty--">−</button>
+          <div class="pd__qty" role="group" :aria-label="t('common.quantity')">
+            <button type="button" :aria-label="t('common.fewer')" :disabled="qty <= 1" @click="qty--">−</button>
             <output aria-live="polite">{{ qty }}</output>
-            <button type="button" aria-label="One more" :disabled="qty >= 20" @click="qty++">+</button>
+            <button type="button" :aria-label="t('common.more')" :disabled="qty >= 20" @click="qty++">+</button>
           </div>
           <button type="button" class="btn btn--solid pd__add" :disabled="!canAdd" @click="addToBag">
-            Add to bag · {{ formatPrice(shown.price * qty) }}
+            {{ t('product.addWithPrice', { price: formatPrice(shown.price * qty) }) }}
           </button>
         </div>
       </div>

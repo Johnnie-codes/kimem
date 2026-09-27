@@ -18,8 +18,12 @@ Business facts (contact email, currency, socials, order channel, batch numbers) 
 `src/data/site.js`. Most can be set without touching code: copy `.env.example` to `.env`.
 Set `VITE_SITE_URL` before a production build so link previews get an absolute image URL.
 
-Info pages (shipping, returns, privacy…) are in `src/data/pages.js` and open at
-`#page-<id>`. **Their copy is a draft and must be reviewed before launch.**
+All page copy lives in `src/i18n/en.js` and `src/i18n/am.js` (English and Amharic).
+Missing Amharic keys fall back to English. **The Amharic is a machine-assisted first draft and
+needs a native speaker's review.** Info pages (shipping, returns, privacy…) open at
+`#page-<id>`; **their copy is a draft and must be reviewed before launch.**
+
+To try the shop before real products exist: `npm run dev`, then open `/?demo`.
 
 See `ROADMAP.md` for what is done and what is planned.
 
@@ -31,7 +35,8 @@ src/
   components/             one component per section (hero, notes, atelier, collection…)
   composables/            useScroll (Lenis + GSAP), useTheme, useBag, useAppState
   directives/             v-reveal, v-reveal.group, v-split-words, v-parallax, v-magnetic, v-theme
-  data/                   images, notes, products (all page copy lives here)
+  data/                   site config, products, moods, notes, pages (structure only)
+  i18n/                   all page copy, English + Amharic
   styles/                 tokens.css (design tokens, light/dark themes), base.css
   assets/img/             mood photography (atmosphere only, not products)
 ```

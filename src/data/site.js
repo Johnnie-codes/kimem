@@ -39,9 +39,6 @@ export const site = {
     handle: env.VITE_ORDER_HANDLE || '',
   },
 
-  /* Promises shown under the collection. Only rendered once there are products to buy. */
-  assurances: ['Refillable glass, forever', 'Hand-numbered bottles'], // TODO: add shipping / samples once decided
-
   /* Atelier figures. TODO: confirm both numbers. */
   batch: {
     size: 200,

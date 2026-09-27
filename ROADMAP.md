@@ -28,12 +28,12 @@ Everything here stays hidden until products exist. Try it now with `npm run dev`
 - [x] Scent finder: pick moods, get a matching perfume
 - [x] Demo products for development (`?demo`), never in a production build
 
-## Phase 3 — Atmosphere
+## Phase 3 — Atmosphere ✅
 
-- [ ] Liquid ripple on hero photos
-- [ ] Drifting smoke behind the hero
-- [ ] English / Amharic switch
-- [ ] Ambient sound toggle (off by default)
+- [x] Liquid ripple on hero photos
+- [x] Drifting smoke behind the hero
+- [x] English / Amharic switch (all copy in `src/i18n/`; Amharic is a first draft)
+- [x] Ambient sound toggle (off by default, synthesised in the browser, no audio file)
 
 ## Phase 4 — Needs a backend or an owner decision (not built)
 

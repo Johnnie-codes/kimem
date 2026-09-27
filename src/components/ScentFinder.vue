@@ -4,6 +4,9 @@ import { moods } from '@/data/moods'
 import { catalogue } from '@/data/catalogue'
 import { formatPrice } from '@/data/site'
 import { useQuickView } from '@/composables/useQuickView'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const { show } = useQuickView()
 const picked = ref([])
@@ -33,13 +36,13 @@ const matches = computed(() => {
     <div class="container">
       <header class="section-head" v-reveal.group>
         <div>
-          <p class="eyebrow">Find yours</p>
-          <h2 class="section-title">Choose a feeling, <em>not a note.</em></h2>
+          <p class="eyebrow">{{ t('finder.eyebrow') }}</p>
+          <h2 class="section-title">{{ t('finder.titleA') }} <em>{{ t('finder.titleB') }}</em></h2>
         </div>
-        <p class="lead">Pick one or two. We will point you to the bottle that holds them.</p>
+        <p class="lead">{{ t('finder.lead') }}</p>
       </header>
 
-      <div class="finder__moods" role="group" aria-label="Moods" v-reveal.group="{ stagger: 0.08 }">
+      <div class="finder__moods" role="group" :aria-label="t('finder.group')" v-reveal.group="{ stagger: 0.08 }">
         <button
           v-for="m in moods"
           :key="m.key"
@@ -51,8 +54,8 @@ const matches = computed(() => {
         >
           <img :src="m.image.src" alt="" loading="lazy" decoding="async" />
           <span class="mood__text">
-            <strong>{{ m.label }}</strong>
-            <span>{{ m.line }}</span>
+            <strong>{{ t(`moods.${m.key}.label`) }}</strong>
+            <span>{{ t(`moods.${m.key}.line`) }}</span>
           </span>
           <span class="mood__check" aria-hidden="true"></span>
         </button>
@@ -60,9 +63,9 @@ const matches = computed(() => {
 
       <div class="finder__result" aria-live="polite">
         <Transition name="result" mode="out-in">
-          <p v-if="!picked.length" key="none" class="finder__hint">Nothing chosen yet.</p>
+          <p v-if="!picked.length" key="none" class="finder__hint">{{ t('finder.none') }}</p>
           <p v-else-if="!matches.length" key="nomatch" class="finder__hint">
-            Nothing in this batch for that feeling yet. Try another.
+            {{ t('finder.noMatch') }}
           </p>
           <ul v-else :key="matches.map((p) => p.id).join()" class="finder__matches">
             <li v-for="p in matches" :key="p.id">
@@ -72,7 +75,7 @@ const matches = computed(() => {
                   <span class="match__name">{{ p.name }}</span>
                   <span class="match__meta">{{ p.notes }} · {{ formatPrice(p.price) }}</span>
                 </span>
-                <span class="link-arrow">View</span>
+                <span class="link-arrow">{{ t('common.view') }}</span>
               </button>
             </li>
           </ul>

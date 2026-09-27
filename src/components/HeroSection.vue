@@ -4,21 +4,23 @@ import { gsap, prefersReducedMotion } from '@/lib/gsap'
 import { useAppState } from '@/composables/useAppState'
 import { useScroll } from '@/composables/useScroll'
 import { images } from '@/data/images'
-import { moodByKey } from '@/data/moods'
+import { useI18n } from '@/i18n'
 import IconArrow from './IconArrow.vue'
+import HeroSmoke from './HeroSmoke.vue'
 
+const { t } = useI18n()
 const { ready } = useAppState()
 const { scrollTo } = useScroll()
 const root = useTemplateRef('root')
 
 /* Mood images, not fragrances: captions describe a feeling, never a note or product.
-   speed = scroll parallax, depth = pointer parallax */
+   label = i18n key, speed = scroll parallax, depth = pointer parallax */
 const items = [
-  { key: 'citrus', image: images.citrus, num: '01', label: moodByKey.warmth.label, to: '#notes', speed: 0.35, depth: 0.9 },
-  { key: 'papaya', image: images.papaya, num: '02', label: moodByKey.ripeness.label, to: '#notes', speed: 0.15, depth: 0.5 },
-  { key: 'bottles', image: images.bottles, num: 'Nº 01', label: 'The collection', to: '#collection', speed: 0.55, depth: 1.3 },
-  { key: 'leaves', image: images.leaves, num: '03', label: moodByKey.morning.label, to: '#atelier', speed: 0.2, depth: 0.6 },
-  { key: 'smoke', image: images.smoke, num: '04', label: moodByKey.stillness.label, to: '#notes', speed: 0.4, depth: 1 },
+  { key: 'citrus', image: images.citrus, num: '01', label: 'moods.warmth.label', to: '#notes', speed: 0.35, depth: 0.9 },
+  { key: 'papaya', image: images.papaya, num: '02', label: 'moods.ripeness.label', to: '#notes', speed: 0.15, depth: 0.5 },
+  { key: 'bottles', image: images.bottles, num: 'Nº 01', label: 'hero.theCollection', to: '#collection', speed: 0.55, depth: 1.3 },
+  { key: 'leaves', image: images.leaves, num: '03', label: 'moods.morning.label', to: '#atelier', speed: 0.2, depth: 0.6 },
+  { key: 'smoke', image: images.smoke, num: '04', label: 'moods.stillness.label', to: '#notes', speed: 0.4, depth: 1 },
 ]
 
 let ctx
@@ -69,6 +71,34 @@ onMounted(() => {
       gsap.to('.hero__title-a', { y: 70, ease: 'none', scrollTrigger: bounds })
       gsap.to('.hero__title-b', { y: -40, ease: 'none', scrollTrigger: bounds })
 
+      /* liquid ripple: one shared SVG filter, lent to whichever photo is hovered */
+      const turbulence = root.value.querySelector('#hero-ripple feTurbulence')
+      const displace = root.value.querySelector('#hero-ripple feDisplacementMap')
+      let rippleTl
+      let rippled
+      const clearRipple = () => {
+        if (rippled) rippled.style.filter = ''
+        rippled = null
+      }
+      const onItemEnter = (e) => {
+        const media = e.currentTarget.querySelector('.hero__item-media')
+        rippleTl?.kill()
+        clearRipple()
+        rippled = media
+        media.style.filter = 'url(#hero-ripple)'
+        const state = { scale: 0, freq: 0.012 }
+        rippleTl = gsap
+          .timeline({ onComplete: clearRipple })
+          .to(state, { scale: 22, freq: 0.02, duration: 0.45, ease: 'power2.out' })
+          .to(state, { scale: 0, freq: 0.012, duration: 1.3, ease: 'power3.out' })
+          .eventCallback('onUpdate', () => {
+            displace.setAttribute('scale', state.scale.toFixed(2))
+            turbulence.setAttribute('baseFrequency', `${state.freq.toFixed(4)} ${(state.freq * 2.4).toFixed(4)}`)
+          })
+      }
+      const itemEls = gsap.utils.toArray('.hero__item')
+      itemEls.forEach((el) => el.addEventListener('pointerenter', onItemEnter))
+
       const inners = gsap.utils.toArray('.hero__item-inner')
       const target = { x: 0, y: 0 }
       const eased = { x: 0, y: 0 }
@@ -96,6 +126,9 @@ onMounted(() => {
       return () => {
         root.value?.removeEventListener('pointermove', onMove)
         root.value?.removeEventListener('pointerleave', onLeave)
+        itemEls.forEach((el) => el.removeEventListener('pointerenter', onItemEnter))
+        rippleTl?.kill()
+        clearRipple()
         gsap.ticker.remove(tick)
         inners.forEach((el) => (el.style.translate = ''))
       }
@@ -121,39 +154,45 @@ onBeforeUnmount(() => {
 
 <template>
   <section id="top" ref="root" class="hero" v-theme="'light'">
+    <HeroSmoke />
+    <svg class="hero__filters" aria-hidden="true" focusable="false">
+      <filter id="hero-ripple" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.012 0.029" numOctaves="2" seed="7" />
+        <feDisplacementMap in="SourceGraphic" scale="0" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </svg>
     <div class="container hero__inner">
       <p class="eyebrow hero__eyebrow" data-hero>
-        Maison de Parfum<span class="hero__sep" aria-hidden="true">·</span>Collection Nº 01
+        {{ t('hero.eyebrow') }}<span class="hero__sep" aria-hidden="true">·</span>{{ t('hero.collectionNo') }}
       </p>
 
       <p class="hero__lede" data-hero>
-        Small-batch fragrances made to be remembered rather than noticed. Composed by hand,
-        two hundred bottles at a time.
+        {{ t('hero.lede') }}
       </p>
 
       <h1 class="hero__title">
         <span class="hero__title-a">
-          <span class="line"><span class="line__in">Memory,</span></span>
+          <span class="line"><span class="line__in">{{ t('hero.titleA') }}</span></span>
         </span>
         <span class="hero__title-b">
-          <span class="line"><span class="line__in"><em>distilled.</em></span></span>
+          <span class="line"><span class="line__in"><em>{{ t('hero.titleB') }}</em></span></span>
         </span>
       </h1>
 
-      <div class="hero__gallery" role="list" aria-label="The world of Kimem">
+      <div class="hero__gallery" role="list" :aria-label="t('hero.gallery')">
         <figure
           v-for="item in items"
           :key="item.key"
           class="hero__item"
           :class="`hero__item--${item.key}`"
           :data-speed="item.speed"
-          data-cursor="Explore"
+          :data-cursor="t('hero.cursor')"
           role="listitem"
         >
           <button
             type="button"
             class="hero__item-btn"
-            :aria-label="`${item.label} — go to section`"
+            :aria-label="t('hero.goTo', { label: t(item.label) })"
             @click="scrollTo(item.to)"
           >
             <span class="hero__item-inner" :data-depth="item.depth">
@@ -163,17 +202,17 @@ onBeforeUnmount(() => {
             </span>
           </button>
           <figcaption class="hero__caption">
-            <span>{{ item.num }}</span>{{ item.label }}
+            <span>{{ item.num }}</span>{{ t(item.label) }}
           </figcaption>
         </figure>
       </div>
 
       <div class="hero__cta" data-hero>
         <div class="hero__actions">
-          <a href="#collection" class="btn btn--solid" v-magnetic>Explore the collection</a>
-          <a href="#atelier" class="link-arrow">Our process <IconArrow /></a>
+          <a href="#collection" class="btn btn--solid" v-magnetic>{{ t('hero.explore') }}</a>
+          <a href="#atelier" class="link-arrow">{{ t('hero.process') }} <IconArrow /></a>
         </div>
-        <div class="hero__scroll" aria-hidden="true"><i></i><span>Scroll</span></div>
+        <div class="hero__scroll" aria-hidden="true"><i></i><span>{{ t('hero.scroll') }}</span></div>
       </div>
     </div>
   </section>
@@ -189,7 +228,14 @@ onBeforeUnmount(() => {
   padding-top: calc(var(--nav-h) + 1rem);
   padding-bottom: clamp(2rem, 4vw, 4rem);
 }
+.hero__filters {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
 .hero__inner {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: 1fr auto;
   grid-template-areas:

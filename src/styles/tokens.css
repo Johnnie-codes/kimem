@@ -47,3 +47,15 @@
   --fg: var(--ivory);
   --accent: var(--gold);
 }
+
+/* Amharic: Ethiopic faces first (Latin falls through to the usual fonts), a slightly smaller
+   hero since Ethiopic glyphs are wider, and no tracking, which Ethiopic does not use. */
+:root:lang(am) {
+  --font-display: 'Noto Serif Ethiopic', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Noto Sans Ethiopic', 'Manrope', system-ui, sans-serif;
+  --hero-fs: clamp(2.8rem, 8vw, 8.5rem);
+}
+:root:lang(am) em {
+  font-style: normal; /* Ethiopic has no italic; keep the emphasis through colour instead */
+  color: var(--accent);
+}

@@ -2,9 +2,22 @@
 import { computed, ref, watch } from 'vue'
 import { usePageSheet } from '@/composables/usePageSheet'
 import { site } from '@/data/site'
+import { useI18n } from '@/i18n'
 import BaseSheet from './BaseSheet.vue'
 
 const { current, close } = usePageSheet()
+const { t } = useI18n()
+
+const fill = (text) => text.replaceAll('{email}', site.email)
+const copy = computed(() => {
+  if (!shown.value) return null
+  const c = t(`pages.${shown.value.id}`)
+  return {
+    title: c.title,
+    body: c.body?.map(fill),
+    faq: c.faq?.map((f) => ({ q: fill(f.q), a: fill(f.a) })),
+  }
+})
 
 /* keep the last page rendered while the panel animates out */
 const shown = ref(null)
@@ -15,17 +28,17 @@ const mail = computed(() => `mailto:${site.email}`)
 </script>
 
 <template>
-  <BaseSheet :open="open" :label="shown?.title ?? 'Information'" @close="close">
-    <article v-if="shown" class="page">
+  <BaseSheet :open="open" :label="copy?.title ?? t('pages.fallbackTitle')" @close="close">
+    <article v-if="shown && copy" class="page">
       <p class="eyebrow">Kimem</p>
-      <h2 class="sheet-title">{{ shown.title }}</h2>
+      <h2 class="sheet-title">{{ copy.title }}</h2>
 
-      <div v-if="shown.body" class="page__body">
-        <p v-for="(para, i) in shown.body" :key="i">{{ para }}</p>
+      <div v-if="copy.body" class="page__body">
+        <p v-for="(para, i) in copy.body" :key="i">{{ para }}</p>
       </div>
 
-      <div v-if="shown.faq" class="page__faq">
-        <details v-for="item in shown.faq" :key="item.q">
+      <div v-if="copy.faq" class="page__faq">
+        <details v-for="item in copy.faq" :key="item.q">
           <summary>
             <span class="page__q">{{ item.q }}</span>
           </summary>
@@ -33,7 +46,7 @@ const mail = computed(() => `mailto:${site.email}`)
         </details>
       </div>
 
-      <a v-if="shown.contact" :href="mail" class="btn btn--solid page__cta">Write to us</a>
+      <a v-if="shown.contact" :href="mail" class="btn btn--solid page__cta">{{ t('pages.writeToUs') }}</a>
     </article>
   </BaseSheet>
 </template>

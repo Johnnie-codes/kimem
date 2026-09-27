@@ -1,13 +1,16 @@
 <script setup>
+import { computed } from 'vue'
 import { images } from '@/data/images'
 import { site } from '@/data/site'
+import { useI18n } from '@/i18n'
 import IconArrow from './IconArrow.vue'
 
-const stats = [
-  { value: '100', unit: '%', label: 'refillable glass, forever' },
-  { value: String(site.batch.restWeeks), unit: 'wks', label: 'resting in the dark' },
-  { value: String(site.batch.size), unit: '', label: 'bottles per batch, numbered by hand' },
-]
+const { t } = useI18n()
+const stats = computed(() => [
+  { value: '100', unit: '%', label: t('atelier.statRefill') },
+  { value: String(site.batch.restWeeks), unit: t('atelier.statRestUnit'), label: t('atelier.statRest') },
+  { value: String(site.batch.size), unit: '', label: t('atelier.statBatch') },
+])
 </script>
 
 <template>
@@ -29,12 +32,10 @@ const stats = [
       </div>
 
       <div class="atelier__content" v-reveal.group>
-        <p class="eyebrow">The atelier</p>
-        <h2 class="section-title">Made slowly, <em>by hand.</em></h2>
+        <p class="eyebrow">{{ t('atelier.eyebrow') }}</p>
+        <h2 class="section-title">{{ t('atelier.titleA') }} <em>{{ t('atelier.titleB') }}</em></h2>
         <p class="lead">
-          Every composition is weighed, blended and bottled by hand, in batches small enough to
-          know each one by name. Every batch rests in the dark for twelve weeks before a single
-          bottle is filled.
+          {{ t('atelier.lead', { weeks: site.batch.restWeeks }) }}
         </p>
         <dl class="atelier__stats">
           <div v-for="s in stats" :key="s.label">
@@ -42,7 +43,7 @@ const stats = [
             <dd>{{ s.label }}</dd>
           </div>
         </dl>
-        <a href="#collection" class="link-arrow">Discover the collection <IconArrow /></a>
+        <a href="#collection" class="link-arrow">{{ t('atelier.link') }} <IconArrow /></a>
       </div>
     </div>
   </section>

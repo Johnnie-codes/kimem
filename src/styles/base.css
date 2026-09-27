@@ -328,3 +328,6 @@ html.has-cursor dialog :is(input, textarea) {
   resize: vertical;
   min-height: 4.5rem;
 }
+:root:lang(am) :is(.eyebrow, .link-arrow, .btn, .section-title, h1, h2, h3) {
+  letter-spacing: 0;
+}

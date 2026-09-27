@@ -2,6 +2,9 @@
 import { onBeforeUnmount, onMounted, ref, useTemplateRef } from 'vue'
 import { ScrollTrigger } from '@/lib/gsap'
 import { notes } from '@/data/notes'
+import { useI18n } from '@/i18n'
+
+const { t } = useI18n()
 
 const root = useTemplateRef('root')
 const active = ref(0)
@@ -30,12 +33,11 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()))
     <div class="container">
       <header class="section-head notes__head" v-reveal.group>
         <div>
-          <p class="eyebrow">Anatomy of a scent</p>
-          <h2 class="section-title">Three notes, <em>one slow reveal.</em></h2>
+          <p class="eyebrow">{{ t('notes.eyebrow') }}</p>
+          <h2 class="section-title">{{ t('notes.titleA') }} <em>{{ t('notes.titleB') }}</em></h2>
         </div>
         <p class="lead">
-          A Kimem composition unfolds the way a memory does: a bright first impression, a
-          warmth that settles, and something that stays long after.
+          {{ t('notes.lead') }}
         </p>
       </header>
 
@@ -55,7 +57,7 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()))
           </div>
           <div class="notes__meta">
             <span>{{ pad(active + 1) }} — {{ pad(notes.length) }}</span>
-            <span>{{ notes[active].timing }}</span>
+            <span>{{ t(`notes.${notes[active].key}.timing`) }}</span>
           </div>
         </div>
 
@@ -71,11 +73,11 @@ onBeforeUnmount(() => triggers.forEach((t) => t.kill()))
             </div>
             <div class="note__head">
               <span class="note__num">{{ pad(i + 1) }}</span>
-              <p class="eyebrow">{{ n.layer }} · {{ n.tagline }}</p>
+              <p class="eyebrow">{{ t(`notes.${n.key}.layer`) }} · {{ t(`notes.${n.key}.tagline`) }}</p>
             </div>
-            <h3 class="note__title">{{ n.title }}</h3>
-            <p class="note__text">{{ n.text }}</p>
-            <p class="note__timing">{{ n.timing }}</p>
+            <h3 class="note__title">{{ t(`notes.${n.key}.title`) }}</h3>
+            <p class="note__text">{{ t(`notes.${n.key}.text`) }}</p>
+            <p class="note__timing">{{ t(`notes.${n.key}.timing`) }}</p>
           </article>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { site, formatPrice } from '@/data/site'
+import { t } from '@/i18n'
 
 /*
  * There is no payment processor yet, so checkout turns the bag into a message a person can
@@ -7,12 +8,18 @@ import { site, formatPrice } from '@/data/site'
  */
 export function orderMessage(items, subtotal, note = '') {
   const lines = items.map((l) => {
-    const engraved = l.engraving ? ` (engraved "${l.engraving}")` : ''
+    const engraved = l.engraving ? ` (${t('order.engraved', { initials: l.engraving })})` : ''
     return `• ${l.qty} × ${l.product.name}, ${l.product.kind}${engraved} — ${formatPrice(l.product.price * l.qty)}`
   })
-  const parts = [`Hello ${site.name}, I would like to order:`, '', ...lines, '', `Subtotal: ${formatPrice(subtotal)}`]
-  if (note.trim()) parts.push('', `Note: ${note.trim()}`)
-  parts.push('', 'Please confirm availability, delivery and payment.')
+  const parts = [
+    t('order.greeting', { name: site.name }),
+    '',
+    ...lines,
+    '',
+    t('order.subtotal', { price: formatPrice(subtotal) }),
+  ]
+  if (note.trim()) parts.push('', t('order.note', { note: note.trim() }))
+  parts.push('', t('order.closing'))
   return parts.join('\n')
 }
 
@@ -27,11 +34,10 @@ export function orderLink(message) {
   if (channel === 'telegram' && username) {
     return { channel, href: `https://t.me/${encodeURIComponent(username)}`, copy: message }
   }
-  const subject = encodeURIComponent(`Order — ${site.name}`)
+  const subject = encodeURIComponent(t('order.subject', { name: site.name }))
   return {
     channel: 'email',
     href: `mailto:${site.email}?subject=${subject}&body=${encodeURIComponent(message)}`,
   }
 }
 
-export const channelLabel = { email: 'email', whatsapp: 'WhatsApp', telegram: 'Telegram' }
