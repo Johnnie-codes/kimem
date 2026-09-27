@@ -6,7 +6,6 @@ import { useScroll } from '@/composables/useScroll'
 import { images } from '@/data/images'
 import { useI18n } from '@/i18n'
 import IconArrow from './IconArrow.vue'
-import HeroSmoke from './HeroSmoke.vue'
 
 const { t } = useI18n()
 const { ready } = useAppState()
@@ -154,7 +153,6 @@ onBeforeUnmount(() => {
 
 <template>
   <section id="top" ref="root" class="hero" v-theme="'light'">
-    <HeroSmoke />
     <svg class="hero__filters" aria-hidden="true" focusable="false">
       <filter id="hero-ripple" x="-5%" y="-5%" width="110%" height="110%">
         <feTurbulence type="fractalNoise" baseFrequency="0.012 0.029" numOctaves="2" seed="7" />

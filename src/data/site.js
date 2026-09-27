@@ -2,6 +2,8 @@
  * Everything about the business that the page needs to know, in one place.
  * Values marked TODO are placeholders the owner still has to confirm.
  */
+import { locale } from '@/i18n'
+
 const env = import.meta.env
 
 export const site = {
@@ -18,9 +20,8 @@ export const site = {
     { label: 'Telegram', url: env.VITE_TELEGRAM_URL || '' },
   ],
 
-  /* Prices are stored as plain numbers in this currency. */
-  currency: env.VITE_CURRENCY || 'EUR', // TODO: EUR or ETB?
-  locale: 'en-GB',
+  /* Prices are stored as plain numbers in Ethiopian birr. */
+  currency: env.VITE_CURRENCY || 'ETB',
 
   /*
    * Newsletter. Any endpoint that accepts a POSTed form with an `email` field and answers
@@ -31,12 +32,13 @@ export const site = {
 
   /*
    * How an order leaves the site. There is no payment processor yet, so checkout hands the
-   * bag to a person: 'whatsapp' (handle = number in international format, digits only),
-   * 'telegram' (handle = username without @) or 'email' (handle ignored, uses site.email).
+   * bag to a person on Telegram. Set VITE_ORDER_HANDLE to the shop's Telegram username
+   * (without @). Until it is set, orders fall back to email so none are lost.
+   * Other channels: 'whatsapp' (handle = number, digits only) or 'email'.
    */
   order: {
-    channel: env.VITE_ORDER_CHANNEL || 'email',
-    handle: env.VITE_ORDER_HANDLE || '',
+    channel: env.VITE_ORDER_CHANNEL || 'telegram',
+    handle: env.VITE_ORDER_HANDLE || '', // TODO: the shop's Telegram username
   },
 
   /* Atelier figures. TODO: confirm both numbers. */
@@ -51,8 +53,9 @@ export const site = {
 
 export const activeSocials = site.socials.filter((s) => s.url)
 
+/* ETB 4,500 in English, ብር 4,500 in Amharic */
 export function formatPrice(amount) {
-  return new Intl.NumberFormat(site.locale, {
+  return new Intl.NumberFormat(locale.value === 'am' ? 'am-ET' : 'en-ET', {
     style: 'currency',
     currency: site.currency,
     maximumFractionDigits: 0,

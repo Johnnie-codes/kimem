@@ -31,14 +31,15 @@ Everything here stays hidden until products exist. Try it now with `npm run dev`
 ## Phase 3 — Atmosphere ✅
 
 - [x] Liquid ripple on hero photos
-- [x] Drifting smoke behind the hero
+- [x] ~~Drifting smoke behind the hero~~ — removed: it read as a grey haze over the hero
 - [x] English / Amharic switch (all copy in `src/i18n/`; Amharic is a first draft)
 - [x] Ambient sound toggle (off by default, synthesised in the browser, no audio file)
 
 ## Phase 4 — Needs a backend or an owner decision (not built)
 
 - Real products: names, notes, prices, product photos
-- Currency and market (EUR or ETB), and which order channel to use
+- ~~Currency and order channel~~ — decided: ETB, orders via Telegram
+- The shop's Telegram username (`VITE_ORDER_HANDLE`)
 - Newsletter provider account
 - Online payments (Stripe / Chapa) instead of the hand-off
 - Memory wall (visitor submissions need storage and moderation)

@@ -32,7 +32,9 @@ export function orderLink(message) {
     return { channel, href: `https://wa.me/${digits}?text=${encodeURIComponent(message)}` }
   }
   if (channel === 'telegram' && username) {
-    return { channel, href: `https://t.me/${encodeURIComponent(username)}`, copy: message }
+    // newer Telegram apps pre-fill ?text=; older ones ignore it, so the message is also copied
+    const href = `https://t.me/${encodeURIComponent(username)}?text=${encodeURIComponent(message)}`
+    return { channel, href, copy: message }
   }
   const subject = encodeURIComponent(t('order.subject', { name: site.name }))
   return {
